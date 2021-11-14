@@ -1,6 +1,7 @@
 using System.Text;
 using API.Data;
 using API.Data.Repository;
+using API.Helpers;
 using API.Interfaces;
 using API.Interfaces.Repository;
 using API.Mapping;
@@ -24,6 +25,8 @@ namespace API.Extensions
             services.AddAutoMapper(typeof(MappingProfile));
 
             services.Configure<CloudinarySettings>(configuration.GetSection("CloudinarySettings"));
+
+            services.AddScoped<LogUserActivity>();
 
             services.AddCors(option =>
             {

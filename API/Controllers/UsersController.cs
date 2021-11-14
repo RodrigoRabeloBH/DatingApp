@@ -32,9 +32,16 @@ namespace API.Controllers
         [HttpGet("all")]
         public async Task<IActionResult> Get([FromQuery] UserParams userParams)
         {
-            var users = await _rep.GetMembersAsync(userParams);
+            var currentUser = await _rep.GetUserByUsernameAsync(User.GetUsername());
 
-            if (!users.Any()) return Ok(new ApiResponse(204, "No Content"));
+            userParams.CurrentUsername = currentUser.UserName;
+
+            if (string.IsNullOrEmpty(userParams.Gender))
+            {
+                userParams.Gender = currentUser.Gender.ToLower() == "male" ? "female" : "male";
+            }
+
+            var users = await _rep.GetMembersAsync(userParams);
 
             Response.AddPaginationHeader(users.CurrentPage, users.PageSize, users.TotalCount, users.TotalPages);
 

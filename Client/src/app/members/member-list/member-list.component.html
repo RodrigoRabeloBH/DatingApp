@@ -1,5 +1,33 @@
 <div class="container-fluid">
   <div class="row mt-2">
+    <h3 class="lead">Your matches - {{pagination?.totalItems}} found</h3>
+  </div>
+  <div class="row mt-2">
+    <form #form="ngForm" class="form-inline mb-3" (ngSubmit)="getMembers()" autocomplete="off">
+      <div class="form-group">
+        <label>Age from:</label>
+        <input type="number" class="form-control ml-1" style="width: 97px;" name="minAge" min="18"
+          [(ngModel)]="userParams.minAge">
+      </div>
+      <div class="form-group px-2">
+        <label>Age to:</label>
+        <input type="number" class="form-control ml-1" style="width: 97px;" name="maxAge" max="150"
+          [(ngModel)]="userParams.maxAge">
+      </div>
+
+      <div class="form-group px-2">
+        <label>Show: </label>
+        <select name="gender" style="width: 180px; cursor: pointer;" class="form-select  ml-1" [(ngModel)]="userParams.gender">
+          <option *ngFor="let gender of genderList" [value]="gender.value">
+            {{gender.display}}
+          </option>
+        </select>
+      </div>
+      <button class="btn btn-primary btn-sm" type="submit">Apply Filters</button>
+      <button class="btn btn-secondary btn-sm mx-2" (click)="resetFilters()">Reset Filters</button>
+    </form>
+  </div>
+  <div class="row mt-2">
     <div class="col-md-2" *ngFor="let member of members">
       <app-member-card [member]=member></app-member-card>
     </div>
@@ -7,15 +35,8 @@
 </div>
 
 <div class="d-flex justify-content-center" *ngIf="pagination">
-  <pagination 
-    [boundaryLinks]="true"
-    [totalItems]="pagination.totalItems"
-    [itemsPerPage]="pagination.itemsPerPage"
-    [(ngModel)]="pagination.currentPage"
-    (pageChanged)="pageChanged($event)"
-    previousText="&lsaquo;"
-    nextText="&rsaquo;"
-    firstText="&laquo;"
-    lastText="&raquo;">
+  <pagination [boundaryLinks]="true" [totalItems]="pagination.totalItems" [itemsPerPage]="pagination.itemsPerPage"
+    [(ngModel)]="pagination.currentPage" (pageChanged)="pageChanged($event)" previousText="&lsaquo;" nextText="&rsaquo;"
+    firstText="&laquo;" lastText="&raquo;">
   </pagination>
 </div>

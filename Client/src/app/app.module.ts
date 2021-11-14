@@ -33,6 +33,7 @@ import { TextInputComponent } from './forms/text-input/text-input.component';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { DateInputComponent } from './forms/date-input/date-input.component';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
+import { TimeagoModule } from 'ngx-timeago';
 
 
 
@@ -69,6 +70,7 @@ import { PaginationModule } from 'ngx-bootstrap/pagination';
     NgxGalleryModule,
     NgxSpinnerModule,
     PaginationModule.forRoot(),
+    TimeagoModule.forRoot(),
     ToastrModule.forRoot({
       timeOut: 3000,
       positionClass: 'toast-bottom-right',

@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
+import { take } from 'rxjs/operators';
 import { Member } from 'src/app/model/member';
 import { Pagination } from 'src/app/model/pagination';
+import { User } from 'src/app/model/user';
+import { USerParams } from 'src/app/model/userParams';
 import { MemberService } from 'src/app/services/member.service';
 
 @Component({
@@ -14,17 +17,28 @@ export class MemberListComponent implements OnInit {
   members: Member[] = [];
   member: Member | undefined;
   pagination: Pagination | any;
-  pageNumber = 1;
-  pageSize = 12;
+  user: User | any;
+  userParams!: USerParams;
 
-  constructor(private service: MemberService, private toastr: ToastrService) { }
+  genderList = [
+    { value: 'male', display: 'Males' },
+    { value: 'female', display: 'Females' },
+  ]
+
+
+  constructor(private service: MemberService, private toastr: ToastrService) {
+    this.userParams = this.service.getUserParams();
+  }
 
   ngOnInit(): void {
     this.getMembers();
   }
 
   getMembers() {
-    this.service.getMembers(this.pageNumber, this.pageSize)
+
+    this.service.setUserParams(this.userParams);
+
+    this.service.getMembers(this.userParams)
       .subscribe((res: any) => {
         this.members = res.result;
         this.pagination = res.pagination
@@ -34,7 +48,13 @@ export class MemberListComponent implements OnInit {
   }
 
   pageChanged(event: any) {
-    this.pageNumber = event.page;
+    this.userParams.pageNumber = event.page;
+    this.service.setUserParams(this.userParams);
+    this.getMembers();
+  }
+
+  resetFilters() {
+    this.userParams = this.service.resetUserParams();
     this.getMembers();
   }
 }

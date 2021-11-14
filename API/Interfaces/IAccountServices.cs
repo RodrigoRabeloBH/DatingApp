@@ -9,6 +9,6 @@ namespace API.Interfaces
         Task<bool> Register(RegisterModel model);
         Task<bool> Login(AppUser user, LoginModel model);
         Task<AppUser> UserExists(string username);
-        string CreateToken(string username);
+        string CreateToken(AppUser user);
     }
 }

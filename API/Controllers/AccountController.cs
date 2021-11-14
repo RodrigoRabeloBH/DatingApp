@@ -36,9 +36,10 @@ namespace API.Controllers
                 var userModel = new UserModel
                 {
                     Username = newUser.UserName,
-                    Token = _services.CreateToken(newUser.UserName),
+                    Token = _services.CreateToken(newUser),
                     KnownAs = newUser.KnownAs,
-                    PhotoUrl = newUser.Photos.FirstOrDefault(p => p.IsMain)?.Url
+                    PhotoUrl = newUser.Photos.FirstOrDefault(p => p.IsMain)?.Url,
+                    Gender = user.Gender
                 };
 
                 return StatusCode(201, userModel);
@@ -58,10 +59,11 @@ namespace API.Controllers
 
             var userModel = new UserModel
             {
-                Username = model.Username,
-                Token = _services.CreateToken(model.Username),
+                Username = user.UserName,
+                Token = _services.CreateToken(user),
                 PhotoUrl = user.Photos.FirstOrDefault(p => p.IsMain)?.Url,
-                KnownAs = user.KnownAs
+                KnownAs = user.KnownAs,
+                Gender = user.Gender
             };
 
             return StatusCode(200, userModel);

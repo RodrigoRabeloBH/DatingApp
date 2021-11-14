@@ -18,7 +18,7 @@ export class NavComponent implements OnInit {
   constructor(private accountServices: AccountService, private router: Router, private toastrService: ToastrService) { }
 
   ngOnInit(): void {
-    this.currentUser$ = this.accountServices.currentUser$;    
+    this.currentUser$ = this.accountServices.currentUser$;
   }
 
   login() {
@@ -32,6 +32,7 @@ export class NavComponent implements OnInit {
   logout() {
     this.accountServices.logout();
     this.router.navigateByUrl('/');
+    this.toastrService.warning('Logged out!');
     window.location.reload();
   }
 }
