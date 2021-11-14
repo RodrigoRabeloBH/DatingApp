@@ -1,0 +1,26 @@
+<div class="container">
+  <div class="row p-2">
+    <div class="col-md-2">
+      <button class="btn btn-danger btn-sm" (click)="getServerError()">500 Error</button>
+    </div>
+    <div class="col-md-2">
+      <button class="btn btn-danger btn-sm" (click)="getBadRequest()">400 Error</button>
+    </div>
+    <div class="col-md-2">
+      <button class="btn btn-danger btn-sm" (click)="getNotFound()">404 Error</button>
+    </div>
+    <div class="col-md-2">
+      <button class="btn btn-danger btn-sm" (click)="getUnauthorized()">401 Error</button>
+    </div>
+    <div class="col-md-2">
+      <button class="btn btn-danger btn-sm" (click)="getBadRequestValidation()">400 Validation</button>
+    </div>
+  </div>
+  <div class="row mt-5" *ngIf="validationErrors.length > 0">
+    <div class="col-md-8">
+      <ul class="text-danger">
+        <li *ngFor="let error of validationErrors">{{error}}</li>
+      </ul>
+    </div>
+  </div>
+</div>
