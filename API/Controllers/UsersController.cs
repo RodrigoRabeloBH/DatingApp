@@ -1,12 +1,8 @@
-using System.Linq;
 using System.Threading.Tasks;
-using API.Entities;
 using API.Extensions;
 using API.Helpers;
-using API.Interfaces;
-using API.Interfaces.Repository;
+using API.Interfaces.Services;
 using API.Models;
-using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -16,32 +12,18 @@ namespace API.Controllers
     [Authorize]
     public class UsersController : BaseController
     {
-        private readonly IUserRepository _rep;
-
-        private readonly IMapper _mapper;
-
-        private readonly IPhotoService _photoService;
-
-        public UsersController(IUserRepository rep, IMapper mapper, IPhotoService photoService)
+        private readonly IUserServices _service;
+        public UsersController(IUserServices service)
         {
-            _rep = rep;
-            _mapper = mapper;
-            _photoService = photoService;
+            _service = service;
         }
 
         [HttpGet("all")]
         public async Task<IActionResult> Get([FromQuery] UserParams userParams)
         {
-            var currentUser = await _rep.GetUserByUsernameAsync(User.GetUsername());
+            string username = User.GetUsername();
 
-            userParams.CurrentUsername = currentUser.UserName;
-
-            if (string.IsNullOrEmpty(userParams.Gender))
-            {
-                userParams.Gender = currentUser.Gender.ToLower() == "male" ? "female" : "male";
-            }
-
-            var users = await _rep.GetMembersAsync(userParams);
+            var users = await _service.GetAllMembers(userParams, username);
 
             Response.AddPaginationHeader(users.CurrentPage, users.PageSize, users.TotalCount, users.TotalPages);
 
@@ -49,95 +31,76 @@ namespace API.Controllers
         }
 
         [HttpGet("{username}", Name = "GetUser")]
-        public async Task<ActionResult<MemberDto>> GetByUsername(string username)
+        public async Task<ActionResult<MemberModel>> GetByUsername(string username)
         {
-            var user = await _rep.GetMemberAsync(username);
+            var user = await _service.GetByUsername(username);
 
-            if (user == null) return NotFound(new ApiResponse(404));
+            if (user == null) return NotFound();
 
-            return user;
+            return Ok(user);
         }
 
         [HttpPut]
-        public async Task<IActionResult> UpdateUser(MemberUpdateDto model)
+        public async Task<IActionResult> UpdateUser(MemberUpdateModel model)
         {
-            var user = await _rep.GetUserByUsernameAsync(User.GetUsername());
+            string username = User.GetUsername();
 
-            _mapper.Map(model, user);
+            var wasUpdated = await _service.UpdateUser(username, model);
 
-            await _rep.Update(user);
+            if (wasUpdated) return NoContent();
 
-            return NoContent();
+            return BadRequest();
         }
 
         [HttpPost("add-photo")]
-        public async Task<ActionResult<PhotoDto>> AddPhoto(IFormFile file)
+        public async Task<ActionResult<PhotoModel>> AddPhoto(IFormFile file)
         {
-            var user = await _rep.GetUserByUsernameAsync(User.GetUsername());
+            string username = User.GetUsername();
 
-            var result = await _photoService.AddPhotoAsync(file);
+            var photoModel = await _service.AddPhoto(username, file);
 
-            if (result.Error != null) return BadRequest(new ApiResponse(400, result.Error.Message));
-
-            var photo = new Photo
+            if (photoModel != null)
             {
-                Url = result.SecureUrl.AbsoluteUri,
-                PublicId = result.PublicId
-            };
-
-            if (user.Photos.Count == 0)
-            {
-                photo.IsMain = true;
+                return CreatedAtRoute("GetUser", new { username }, photoModel);
             }
 
-            user.Photos.Add(photo);
-
-            await _rep.Update(user);
-
-            return CreatedAtRoute("GetUser", new { username = user.UserName }, _mapper.Map<PhotoDto>(photo));
+            return BadRequest();
         }
 
         [HttpPut("set-main-photo/{photoId}")]
         public async Task<ActionResult> SetMainPhoto(int photoId)
         {
-            var user = await _rep.GetUserByUsernameAsync(User.GetUsername());
+            string username = User.GetUsername();
 
-            var photo = user.Photos.FirstOrDefault(p => p.Id == photoId);
+            var waSeted = await _service.SetMainPhoto(username, photoId);
 
-            if (photo.IsMain) return BadRequest("This is already your main photo");
+            if (waSeted) return NoContent();
 
-            var currentMain = user.Photos.FirstOrDefault(p => p.IsMain);
+            return BadRequest();
+        }
 
-            if (currentMain != null) currentMain.IsMain = false;
+        [HttpDelete]
+        public async Task<ActionResult> Remove()
+        {
+            string username = User.GetUsername();
 
-            photo.IsMain = true;
+            bool wasRemoved = await _service.RemoveUser(username);
 
-            await _rep.Update(user);
+            if (wasRemoved) return Ok();
 
-            return NoContent();
+            return BadRequest();
         }
 
         [HttpDelete("remove-photo/{photoId}")]
         public async Task<ActionResult> RemovePhoto(int photoId)
         {
-            var user = await _rep.GetUserByUsernameAsync(User.GetUsername());
+            string username = User.GetUsername();
 
-            var photo = user.Photos.FirstOrDefault(p => p.Id == photoId);
+            bool wasRemoved = await _service.RemovePhoto(username, photoId);
 
-            if (photo.IsMain) return BadRequest("You cannot delete your main photo");
+            if (wasRemoved) return Ok();
 
-            if (photo.PublicId != null)
-            {
-                var result = await _photoService.DeletePhotoAsync(photo.PublicId);
-
-                if (result.Error != null) return BadRequest(result.Error.Message);
-            }
-
-            user.Photos.Remove(photo);
-
-            await _rep.Update(user);
-
-            return Ok();
+            return BadRequest();
         }
     }
 }

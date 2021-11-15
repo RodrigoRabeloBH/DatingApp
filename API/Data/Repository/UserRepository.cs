@@ -20,15 +20,15 @@ namespace API.Data.Repository
             _mapper = mapper;
         }
 
-        public async Task<MemberDto> GetMemberAsync(string username)
+        public async Task<MemberModel> GetMemberAsync(string username)
         {
             return await _context.Users
                 .Where(u => u.UserName == username)
-                .ProjectTo<MemberDto>(_mapper.ConfigurationProvider)
+                .ProjectTo<MemberModel>(_mapper.ConfigurationProvider)
                 .SingleOrDefaultAsync();
         }
 
-        public async Task<PagedList<MemberDto>> GetMembersAsync(UserParams userParams)
+        public async Task<PagedList<MemberModel>> GetMembersAsync(UserParams userParams)
         {
             var minDob = DateTime.Today.AddYears(-userParams.MaxAge - 1);
             var maxDob = DateTime.Today.AddYears(-userParams.MinAge);
@@ -46,9 +46,9 @@ namespace API.Data.Repository
             };
 
 
-            var members = query.ProjectTo<MemberDto>(_mapper.ConfigurationProvider).AsNoTracking();
+            var members = query.ProjectTo<MemberModel>(_mapper.ConfigurationProvider).AsNoTracking();
 
-            return await PagedList<MemberDto>.CreateAsync(members, userParams.PageNumber, userParams.PageSize);
+            return await PagedList<MemberModel>.CreateAsync(members, userParams.PageNumber, userParams.PageSize);
         }
 
         public async Task<AppUser> GetUserByIdAsync(int id)

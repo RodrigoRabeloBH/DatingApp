@@ -27,18 +27,16 @@ namespace API.Controllers
 
             if (user != null) return BadRequest(new ApiResponse(400, "Username is taken"));
 
-            bool wasCreated = await _services.Register(model);
+            user = await _services.Register(model);
 
-            if (wasCreated)
+            if (user != null)
             {
-                var newUser = _mapper.Map<AppUser>(model);
-
                 var userModel = new UserModel
                 {
-                    Username = newUser.UserName,
-                    Token = _services.CreateToken(newUser),
-                    KnownAs = newUser.KnownAs,
-                    PhotoUrl = newUser.Photos.FirstOrDefault(p => p.IsMain)?.Url,
+                    Username = user.UserName,
+                    Token = _services.CreateToken(user),
+                    KnownAs = user.KnownAs,
+                    PhotoUrl = user.Photos.FirstOrDefault(p => p.IsMain)?.Url,
                     Gender = user.Gender
                 };
 

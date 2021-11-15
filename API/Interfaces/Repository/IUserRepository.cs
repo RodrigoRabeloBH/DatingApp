@@ -10,7 +10,7 @@ namespace API.Interfaces.Repository
     {
         Task<AppUser> GetUserByUsernameAsync(string username);
         Task<AppUser> GetUserByIdAsync(int id);
-        Task<MemberDto> GetMemberAsync(string username);
-        Task<PagedList<MemberDto>> GetMembersAsync(UserParams userParams);
+        Task<MemberModel> GetMemberAsync(string username);
+        Task<PagedList<MemberModel>> GetMembersAsync(UserParams userParams);
     }
 }

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace API.Models
 {
-    public class MemberDto
+    public class MemberModel
     {
         public string UserName { get; set; }
         public string PhotoUrl { get; set; }
@@ -18,6 +18,6 @@ namespace API.Models
         public string Interests { get; set; }
         public string City { get; set; }
         public string Country { get; set; }
-        public ICollection<PhotoDto> Photos { get; set; }
+        public ICollection<PhotoModel> Photos { get; set; }
     }
 }

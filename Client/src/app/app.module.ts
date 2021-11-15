@@ -34,6 +34,7 @@ import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { DateInputComponent } from './forms/date-input/date-input.component';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
 import { TimeagoModule } from 'ngx-timeago';
+import { ButtonsModule } from 'ngx-bootstrap/buttons';
 
 
 
@@ -65,6 +66,7 @@ import { TimeagoModule } from 'ngx-timeago';
     FormsModule,
     BsDropdownModule.forRoot(),
     BsDatepickerModule.forRoot(),
+    ButtonsModule.forRoot(),
     TabsModule.forRoot(),
     ReactiveFormsModule,
     NgxGalleryModule,

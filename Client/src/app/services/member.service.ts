@@ -79,12 +79,29 @@ export class MemberService {
     return this.http.put(this.baseUrl, member);
   }
 
+  removeUser() {
+    return this.http.delete(this.baseUrl);
+  }
+
   setMainPhoto(photoId: number) {
     return this.http.put(this.baseUrl + 'set-main-photo/' + photoId, {});
   }
 
   removePhoto(photoId: number) {
     return this.http.delete(this.baseUrl + 'remove-photo/' + photoId);
+  }
+
+  addLike(username: string) {
+    return this.http.post(this.baseUrl.replace('users/', 'likes/') + username, {});
+  }
+
+  getLikes(predicate: string, pageNumber: number, pageSize: number) {
+
+    let params = this.getPaginationHeaders(pageNumber, pageSize);
+
+    params = params.append('predicate', predicate);
+
+    return this.getPaginatedResult<Partial<Member[]>>(this.baseUrl.replace('users/', 'likes'), params);   
   }
 
   private getPaginatedResult<T>(url: string, params: any) {

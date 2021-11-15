@@ -58,6 +58,15 @@
         <tab heading="Edit Photos">
           <app-photo-editor [member]="member"></app-photo-editor>
         </tab>
+        <tab heading="Remove Account">
+          <div class="row">
+            <p class="alert alert-danger">Are you sure you want to remove your account?          
+            </p>
+            <div class="col-md-3">
+              <button class="btn btn-danger" (click)="removeAccount()"><i class="fa fa-user-times fa-2x"></i> Yes i'm sure</button>
+            </div>
+          </div>
+        </tab>
       </tabset>
     </div>
   </div>

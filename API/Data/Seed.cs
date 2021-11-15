@@ -19,16 +19,21 @@ namespace API.Data
 
             var users = JsonConvert.DeserializeObject<List<AppUser>>(userData);
 
+            var usersWithPassword = new List<AppUser>();
+
+
             foreach (var user in users)
             {
                 using var hmac = new HMACSHA512();
 
                 user.UserName = user.UserName.ToUpper();
-                user.PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes("Pa$$w0rd"));
+                user.PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes("password"));
                 user.PasswordSalt = hmac.Key;
 
-                context.Users.Add(user);
+                usersWithPassword.Add(user);
             }
+
+            context.AddRange(usersWithPassword);
 
             await context.SaveChangesAsync();
         }

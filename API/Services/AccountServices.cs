@@ -64,7 +64,7 @@ namespace API.Services
 
             return await Task.FromResult(true);
         }
-        public async Task<bool> Register(RegisterModel model)
+        public async Task<AppUser> Register(RegisterModel model)
         {
             using var hmac = new HMACSHA512();
 
@@ -74,7 +74,9 @@ namespace API.Services
 
             user.PasswordSalt = hmac.Key;
 
-            return await _rep.Insert(user);
+             await _rep.Insert(user);
+
+            return user;
         }
         public async Task<AppUser> UserExists(string username)
         {

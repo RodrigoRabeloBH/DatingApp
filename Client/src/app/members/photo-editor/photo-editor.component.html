@@ -45,15 +45,15 @@
         </div>
       </div>
       <div class="my-2">
-        <button type="button" class="btn btn-success btn-sm font-weight-bold text-dark" (click)="uploader.uploadAll()"
+        <button type="button" class="btn btn-success btn-sm" (click)="uploader.uploadAll()"
           [disabled]="!uploader.getNotUploadedItems().length">
           <span class="fa fa-upload"></span> Upload all
         </button>
-        <button type="button" class="btn btn-warning btn-sm font-weight-bold text-dark mx-2"
-          (click)="uploader.cancelAll()" [disabled]="!uploader.isUploading">
+        <button type="button" class="btn btn-warning btn-sm mx-2" (click)="uploader.cancelAll()"
+          [disabled]="!uploader.isUploading">
           <span class="fa fa-ban"></span> Cancel all
         </button>
-        <button type="button" class="btn btn-danger btn-sm font-weight-bold text-dark" (click)="uploader.clearQueue()"
+        <button type="button" class="btn btn-danger btn-sm" (click)="uploader.clearQueue()"
           [disabled]="!uploader.queue.length">
           <span class="fa fa-trash"></span> Remove all
         </button>

@@ -21,9 +21,12 @@ namespace API.Helpers
 
             var user = await repo.GetUserByIdAsync(userId);
 
-            user.LastActive = DateTime.Now;
+            if (user != null)
+            {
+                user.LastActive = DateTime.Now;
 
-            await repo.Update(user);
+                await repo.Update(user);
+            }
         }
     }
 }

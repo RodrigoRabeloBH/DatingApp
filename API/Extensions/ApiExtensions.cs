@@ -4,9 +4,9 @@ using API.Data.Repository;
 using API.Helpers;
 using API.Interfaces;
 using API.Interfaces.Repository;
+using API.Interfaces.Services;
 using API.Mapping;
 using API.Middleware;
-using API.Models;
 using API.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -73,15 +73,21 @@ namespace API.Extensions
         }
         private static void AddServicesExtensions(IServiceCollection services)
         {
-            services.AddTransient<IAccountServices, AccountServices>();
+            services.AddScoped<IAccountServices, AccountServices>();
+
+            services.AddScoped<IUserServices, UserServices>();
 
             services.AddScoped<IPhotoService, PhotoService>();
+
+            services.AddScoped<ILikeServices, LikeServices>();
         }
         private static void AddDatabaseExtensions(IServiceCollection services, IConfiguration config)
         {
             services.AddDbContext<DataContext>(options => options.UseSqlServer(config.GetConnectionString("SqlServer")));
 
-            services.AddTransient<IUserRepository, UserRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
+
+            services.AddScoped<ILikesRepository, LikesRepository>();
         }
         private static void UseSwaggerDocumentation(IApplicationBuilder app)
         {

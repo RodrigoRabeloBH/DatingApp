@@ -1,6 +1,6 @@
 ﻿namespace API.Models
 {
-    public class MemberUpdateDto
+    public class MemberUpdateModel
     {
         public string Introduction { get; set; }
         public string LookingFor { get; set; }

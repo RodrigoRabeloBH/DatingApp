@@ -52,4 +52,12 @@ export class MemberDetailComponent implements OnInit {
         this.toastr.error(error.message);
       });
   }
+
+  addLike(member: Member) {
+    console.log(member);
+    this.service.addLike(member.userName)
+      .subscribe(() => {
+        this.toastr.success('You have liked ' + member.knownAs);
+      })
+  }
 }
