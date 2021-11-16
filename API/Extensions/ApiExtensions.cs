@@ -80,6 +80,8 @@ namespace API.Extensions
             services.AddScoped<IPhotoService, PhotoService>();
 
             services.AddScoped<ILikeServices, LikeServices>();
+
+            services.AddScoped<IMessageServices, MessageServices>();
         }
         private static void AddDatabaseExtensions(IServiceCollection services, IConfiguration config)
         {
@@ -88,6 +90,8 @@ namespace API.Extensions
             services.AddScoped<IUserRepository, UserRepository>();
 
             services.AddScoped<ILikesRepository, LikesRepository>();
+
+            services.AddScoped<IMessageRepository, MessageRepository>();
         }
         private static void UseSwaggerDocumentation(IApplicationBuilder app)
         {

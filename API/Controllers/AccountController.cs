@@ -1,6 +1,5 @@
 using System.Linq;
 using System.Threading.Tasks;
-using API.Entities;
 using API.Interfaces;
 using API.Models;
 using AutoMapper;

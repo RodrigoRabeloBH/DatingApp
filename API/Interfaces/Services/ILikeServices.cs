@@ -9,5 +9,6 @@ namespace API.Interfaces.Services
         Task AddLike(int sourceUserId, string likedUsername);
 
         Task<PagedList<LikeModel>> GetUserLikes(LikesParams likesParams);
+        Task<bool> RemoveAllLikes(int sourceUserId);
     }
 }

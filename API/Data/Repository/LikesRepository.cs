@@ -4,6 +4,7 @@ using API.Helpers;
 using API.Interfaces.Repository;
 using API.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -66,6 +67,24 @@ namespace API.Data.Repository
             return await _context.Users
                 .Include(u => u.LikedUsers)
                 .FirstOrDefaultAsync(u => u.Id == userId);
+        }
+
+        public async Task<IEnumerable<UserLike>> GetLikes(int sourceUserId)
+        {
+            var likes = await _context.Likes
+                .Where(l => l.SourceUserId == sourceUserId || l.LikedUserId == sourceUserId)
+                .ToListAsync();
+
+            return likes;
+        }
+
+        public async Task<bool> RemoveAllLikes(IEnumerable<UserLike> likes)
+        {
+            _context.Likes.RemoveRange(likes);
+
+            var result = await _context.SaveChangesAsync();
+
+            return result != 0;
         }
     }
 }

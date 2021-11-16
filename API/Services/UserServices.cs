@@ -18,11 +18,15 @@ namespace API.Services
         private readonly IMapper _mapper;
 
         private readonly IPhotoService _photoService;
-        public UserServices(IUserRepository rep, IMapper mapper, IPhotoService photoService)
+
+        private readonly ILikeServices _likeServices;
+
+        public UserServices(IUserRepository rep, IMapper mapper, IPhotoService photoService, ILikeServices likeServices)
         {
             _rep = rep;
             _mapper = mapper;
             _photoService = photoService;
+            _likeServices = likeServices;
         }
 
         public async Task<PhotoModel> AddPhoto(string username, IFormFile file)
@@ -131,6 +135,8 @@ namespace API.Services
         public async Task<bool> RemoveUser(string username)
         {
             var user = await _rep.GetUserByUsernameAsync(username);
+
+            await _likeServices.RemoveAllLikes(user.Id);
 
             var result = await _rep.Delete(user);
 

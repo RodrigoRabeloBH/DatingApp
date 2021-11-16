@@ -53,5 +53,30 @@ namespace API.Services
 
             return users;
         }
+
+        public async Task RemoveLike(int sourceUserId, string likedUsername)
+        {
+            var likedUser = await _userRepository.GetUserByUsernameAsync(likedUsername);
+
+            var sourceUser = await _rep.GetUserWithLikes(sourceUserId);
+
+            var userLike = await _rep.GetUserLike(sourceUserId, likedUser.Id);
+
+            if (userLike != null)
+            {
+                await _rep.RemoveLike(userLike);
+
+                await _userRepository.Update(sourceUser);
+
+                return;
+            }
+        }
+
+        public async Task<bool> RemoveAllLikes(int sourceUserId)
+        {
+            var likes = await _rep.GetLikes(sourceUserId);
+
+            return await _rep.RemoveAllLikes(likes);
+        }
     }
 }
